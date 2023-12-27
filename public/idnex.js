@@ -32,7 +32,7 @@ const onSelectStart = (event) => {
   const objects = [];
   for (const intersection of intersections) {
     const object = intersection.object;
-    object.material.emissive.b = 1;
+    // object.material.emissive.b = 1;
     // コントローラーに付与 (付随してふごかすようにする)
     controller.attach(object);
     objects.push(object);
@@ -50,7 +50,7 @@ const onSelectEnd = (event) => {
   if (controller.userData.selected !== undefined) {
     // 選択状態となっていたオブジェクトに対して
     for (const object of controller.userData.selected) {
-      object.material.emissive.b = 0;
+      // object.material.emissive.b = 0;
       // attachでは内部的にaddを呼び出している2ためaddをする必要はありません。
       // 空間に再配置する
       group.attach(object);
@@ -91,12 +91,12 @@ const intersectObjects = (controller) => {
   // 光線とぶつかったオブジェクトをに対して処理
   const intersections = getIntersections(controller);
   for (const intersection of intersections) {
-    const object = intersection.object;
-    object.material.emissive.r = 1;
+    const object = intersection;
+    // object.material.emissive.r = 1;
     intersected.push(object);
     // 触っていたら
     if (isTouch(intersection)) {
-      object.material.emissive.g = 1;
+      // object.material.emissive.g = 1;
       break;
     }
   }
@@ -106,8 +106,8 @@ const intersectObjects = (controller) => {
 const cleanIntersected = () => {
   while (intersected.length) {
     const object = intersected.pop();
-    object.material.emissive.r = 0;
-    object.material.emissive.g = 0;
+    // object.material.emissive.r = 0;
+    // object.material.emissive.g = 0;
   }
 };
 
@@ -130,19 +130,51 @@ const loadFaceParts = () => {
   const loader = new GLTFLoader();
 
   /** 各パーツのURL */
-  const partsUrls = ['./fujisan.glb', './mouth.glb', './nose.glb', './right-eye.glb', './left-eye.glb']
+  const basePartsUrls = ['./fujisan.glb']
+  const facePartsUrls = ['./mouth.glb', './nose.glb', './right-eye.glb', './left-eye.glb']
 
-  const loadParts = (url, scale) => {
+  // 顔のパーツをロードして配置
+  const loadFaceParts = (url) => {
     loader.load(url, gltf => {
-      // サイズ調整
-      gltf.scene.scale.set(scale, scale, scale);
-      // 画面に表示
-      scene.add(gltf.scene);
-    
-    }, undefined, () => {});
+      const object = gltf.scene;
+      object.traverse(function (child) {
+        if (child.isMesh) {
+          child.position.x = 0;
+          child.position.y = 0;
+          child.position.z = -1;
+          child.rotation.x = Math.PI / 2;
+          child.rotation.z = Math.PI / 2;
+          child.scale.x = 0.02;
+          child.scale.y = 0.02;
+          child.scale.z = 0.02;
+          group.add(child);
+        }
+      }, undefined, () => {});
+    })
   }
 
-  partsUrls.forEach((part, index) => loadParts(part, index === 0 ? 3 : 0.02))
+  // 顔の土台をロードして配置
+  const loadBaseParts = (url) => {
+    loader.load(url, gltf => {
+      const object = gltf.scene;
+      object.traverse(function (child) {
+        if (child.isMesh) {
+          child.position.x = 0;
+          child.position.y = 0;
+          child.position.z = -1;
+          child.rotation.x = Math.PI / 2;
+          child.rotation.z = Math.PI / 2;
+          child.scale.x = 3;
+          child.scale.y = 3;
+          child.scale.z = 3;
+          scene.add(gltf.scene);
+        }
+      }, undefined, () => {});
+    })
+  }
+
+  basePartsUrls.forEach(part => loadBaseParts(part))
+  facePartsUrls.forEach(part => loadFaceParts(part))
 }
 
 /** 空間を初期化 */
