@@ -213,7 +213,7 @@
 			// 	i,
 			// ];
 			return [
-				new THREE.BoxGeometry(0.6, 0.8, 0.001),
+				new THREE.BoxGeometry(1, 1, 0.001),
 			];
 		};
 	
@@ -227,17 +227,15 @@
 				return res;
 			}
 			const geometries = getGeometries();
-			const ngeo = geometries.length;
+			const ngeo = geometries.length * nset;
 			const res = [];
 			for (let i = 0; i < ngeo; i++) {
 				const geometry = geometries[i % geometries.length];
-				const getColor = () => {
-					return Math.random() * 0x1000000;
-				};
+				const d = facedata[i % facedata.length];
 				const material = new THREE.MeshStandardMaterial({
 					roughness: 0.0,
 					metalness: 0.0,
-					map:new THREE.TextureLoader().load("eye1.png"),
+					map:new THREE.TextureLoader().load(d.file),
 					transparent: opacity < 1.0,
 					opacity,
 				});
@@ -250,7 +248,7 @@
 	
 		const objs = getObjects();
 		for (const object of objs) {
-			object.position.x = 0;
+			object.position.x = Math.random()*2;
 			object.position.y = 0;
 			object.position.z = 3;
 	
