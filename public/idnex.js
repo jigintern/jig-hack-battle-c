@@ -171,11 +171,9 @@ const loadFaceParts = () => {
           child.scale.z = 3;
           scene.add(gltf.scene);
           basePartsPosi.push(child.position)
-          const indexFace = 2; // 2番目の要素のインデックス
-          const indexBase = 0; // 2番目の要素のインデックス
           
-          drawLine(facePartsPosi[indexFace], basePartsPosi[indexBase]);
-          console.log(facePartsPosi[indexFace], basePartsPosi[indexBase])
+          drawLineR(facePartsPosi[2], basePartsPosi[0]);
+          drawLineL(facePartsPosi[3], basePartsPosi[0]);
         }
       }, undefined, () => {});
     })
@@ -184,12 +182,24 @@ const loadFaceParts = () => {
   facePartsUrls.forEach(part => loadFaceParts(part))
 
 }
-const drawLine = (startPos, endPos) => {
+const drawLineR = (startPos, endPos) => {
   const material = new THREE.LineBasicMaterial({ color: 0x00ff00 , linewidth: 5}); // 緑色の線
 
   const points = [];
   points.push(new THREE.Vector3(startPos.x + -2.25, startPos.y + -0.65, startPos.z + 0.55));
   points.push(new THREE.Vector3(endPos.x + -0.14, endPos.y + 0.7, endPos.z + 2.1));
+
+  const geometry = new THREE.BufferGeometry().setFromPoints(points);
+  const line = new THREE.Line(geometry, material);
+  scene.add(line);
+};
+
+const drawLineL = (startPos, endPos) => {
+  const material = new THREE.LineBasicMaterial({ color: 0x00ff00 , linewidth: 5}); // 緑色の線
+
+  const points = [];
+  points.push(new THREE.Vector3(startPos.x + -1.9, startPos.y + -0.25, startPos.z + 0.5));
+  points.push(new THREE.Vector3(endPos.x + 0.15, endPos.y + 0.68, endPos.z + 2.2));
 
   const geometry = new THREE.BufferGeometry().setFromPoints(points);
   const line = new THREE.Line(geometry, material);
