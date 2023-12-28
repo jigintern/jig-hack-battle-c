@@ -33,7 +33,7 @@ const onSelectStart = (event) => {
   for (const intersection of intersections) {
     const object = intersection.object;
     // object.material.emissive.b = 1;
-    // コントローラーに付与 (付随してふごかすようにする)
+    // コントローラーに付与 (付随して動かすようにする)
     controller.attach(object);
     objects.push(object);
     if (isTouch(intersection)) {
