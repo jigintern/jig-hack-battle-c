@@ -170,7 +170,6 @@ const loadFaceParts = () => {
           child.position.z = 2;
           child.rotation.x = Math.PI / 2;
           child.rotation.z = Math.PI*1.5;
-          console.log(child.rotation.z);
           child.scale.x = 3;
           child.scale.y = 3;
           child.scale.z = 3;
