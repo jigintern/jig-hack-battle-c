@@ -160,7 +160,7 @@ const loadFaceParts = () => {
   const loadBaseParts = (url) => {
     loader.load(url, gltf => {
       const object = gltf.scene;
-      gltf.scene.position.y = -1;
+      gltf.scene.position.y = 1;
       gltf.scene.rotation.x = Math.PI / 2;
       gltf.scene.rotation.y = Math.PI;
       object.traverse(function (child) {
