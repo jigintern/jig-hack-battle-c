@@ -159,24 +159,24 @@ const loadFaceParts = () => {
   const facePartsUrls = ['./mouth.glb', './nose.glb', './righteye.glb', './lefteye.glb']
 
   // 顔のパーツをロードして配置
-  const loadFaceParts = (url) => {
-    loader.load(url, gltf => {
-      const object = gltf.scene;
-      object.traverse(function (child) {
-        if (child.isMesh) {
-          child.position.x = 0;
-          child.position.y = 0;
-          child.position.z = -1;
-          child.rotation.x = Math.PI / 2;
-          child.rotation.z = Math.PI / 2;
-          child.scale.x = 5;
-          child.scale.y = 5;
-          child.scale.z = 5;
-          group.add(child);
-        }
-      }, undefined, () => {});
-    })
-  }
+  // const loadFaceParts = (url) => {
+  //   loader.load(url, gltf => {
+  //     const object = gltf.scene;
+  //     object.traverse(function (child) {
+  //       if (child.isMesh) {
+  //         child.position.x = 0;
+  //         child.position.y = 0;
+  //         child.position.z = -1;
+  //         child.rotation.x = Math.PI / 2;
+  //         child.rotation.z = Math.PI / 2;
+  //         child.scale.x = 5;
+  //         child.scale.y = 5;
+  //         child.scale.z = 5;
+  //         group.add(child);
+  //       }
+  //     }, undefined, () => {});
+  //   })
+  // }
 
   // 顔の土台をロードして配置
   const loadBaseParts = (url) => {
@@ -201,7 +201,7 @@ const loadFaceParts = () => {
   }
 
   basePartsUrls.forEach(part => loadBaseParts(part))
-  facePartsUrls.forEach(part => loadFaceParts(part))
+  // facePartsUrls.forEach(part => loadFaceParts(part))
 }
 
 /**
@@ -359,7 +359,7 @@ const init = () => {
   initScene()
 
   // 顔のパーツを表示
- // loadFaceParts()
+  loadFaceParts()
 
   // コントローラーを設定
   setControllers()
