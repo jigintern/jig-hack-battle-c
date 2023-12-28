@@ -167,9 +167,8 @@ const loadFaceParts = () => {
         if (child.isMesh) {
           child.position.x = 0;
           child.position.y = 0;
-          child.position.z = 5;
+          child.position.z = -1;
           child.rotation.x = Math.PI / 2;
-          child.rotation.y = Math.PI;
           child.rotation.z = Math.PI / 2;
           child.scale.x = 3;
           child.scale.y = 3;
