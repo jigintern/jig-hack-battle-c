@@ -135,7 +135,6 @@
 		const intersections = getIntersections(controller);
 		for (const intersection of intersections) {
 			const object = intersection.object;
-			// object.material.emissive.r = 1;
 			intersected.push(object);
 			if (isTouch(intersection)) {
 				object.material.emissive.g = 1;
@@ -147,8 +146,6 @@
 	const cleanIntersected = () => {
 		while (intersected.length) {
 			const object = intersected.pop();
-			// object.material.emissive.r = 0;
-			// object.material.emissive.g = 0;
 		}
 	};
 	
@@ -196,35 +193,9 @@
 				geo.push(new THREE.BoxGeometry(size, size * faceAspect,0.001));
 			}
 			return geo;
-
-			const textureLoader = new THREE.TextureLoader();
-            const texture = textureLoader.load(options.file);
-            const face1aspect = options.height / options.width;
-            
-            // 平面ジオメトリの生成
-            const sw = 1;
-            const size = options.size;
-            
-            const material = new THREE.MeshBasicMaterial({
-                map: texture,
-                transparent: true,
-                side: THREE.DoubleSide,
-                //color: 0xFF0000, wireframe: true,
-            });
-			return [
-				new THREE.BoxGeometry(1, 1, 0.001),
-			];
 		};
 	
 		const getObjects = () => {
-			if (geometry == "megane") {
-				const res = [];
-				console.log(nset);
-				for (let i = 0; i < nset; i++) {
-					res[i] = createMegane();
-				}
-				return res;
-			}
 			const geometries = getGeometries();
 			const ngeo = geometries.length ;
 			const res = [];
