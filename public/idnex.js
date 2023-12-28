@@ -148,8 +148,6 @@ const render = () => {
 const animate = () => {
   renderer.setAnimationLoop(render);
 };
-// const facePartsPosi = [];
-// const basePartsPosi = [];
 /** 顔のパーツを表示 */
 const loadFaceParts = () => {
   /** GLTFファイルローダー */
@@ -177,10 +175,6 @@ const loadFaceParts = () => {
           // 土台のオブジェクトを保存
           basePartsScene = gltf.scene
           scene.add(gltf.scene);
-          // basePartsPosi.push(child.position)
-          
-          // drawLineR(facePartsPosi[2], basePartsPosi[0]);
-          // drawLineL(facePartsPosi[3], basePartsPosi[0]);
         }
       }, undefined, () => {});
     })
@@ -241,7 +235,7 @@ const drawLineR = (startPos, endPos) => {
   const points = [];
   // points.push(new THREE.Vector3(startPos.x + -2.25, startPos.y + -0.65, startPos.z + 0.55));
   // points.push(new THREE.Vector3(endPos.x + -0.14, endPos.y + 0.7, endPos.z + 2.1));
-  points.push(new THREE.Vector3(startPos.x + 0.10 * 3, startPos.y + 0.37 * 3, startPos.z + 0.044 * 3));
+  points.push(new THREE.Vector3(startPos.x + 0.10, startPos.y + 0.25 , startPos.z + -2));
   points.push(new THREE.Vector3(endPos.x, endPos.y, endPos.z));
 
   const geometry = new THREE.BufferGeometry().setFromPoints(points);
@@ -255,7 +249,7 @@ const drawLineL = (startPos, endPos) => {
   const points = [];
   // points.push(new THREE.Vector3(startPos.x + -1.9, startPos.y + -0.25, startPos.z + 0.5));
   // points.push(new THREE.Vector3(endPos.x + 0.15, endPos.y + 0.68, endPos.z + 2.2));
-  points.push(new THREE.Vector3(startPos.x + 0.11 * 3, startPos.y + 0.37 * 3, startPos.z + -0.02 * 3));
+  points.push(new THREE.Vector3(startPos.x + -0.15, startPos.y + 0.2 , startPos.z + -2));
   points.push(new THREE.Vector3(endPos.x, endPos.y, endPos.z));
 
   const geometry = new THREE.BufferGeometry().setFromPoints(points);
@@ -404,8 +398,7 @@ const init = () => {
 
   // コントローラーを設定
   setControllers()
-  const axes = new THREE.AxisHelper(25);
-  scene.add(axes)
+
 
   // レイキャスティング
   // マウスピッキング（マウスが3D空間のどのオブジェクトの上にあるかを調べること）などに使わる。
