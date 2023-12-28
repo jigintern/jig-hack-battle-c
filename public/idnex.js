@@ -148,8 +148,8 @@ const render = () => {
 const animate = () => {
   renderer.setAnimationLoop(render);
 };
-const facePartsPosi = [];
-const basePartsPosi = [];
+// const facePartsPosi = [];
+// const basePartsPosi = [];
 /** 顔のパーツを表示 */
 const loadFaceParts = () => {
   /** GLTFファイルローダー */
@@ -177,10 +177,10 @@ const loadFaceParts = () => {
           // 土台のオブジェクトを保存
           basePartsScene = gltf.scene
           scene.add(gltf.scene);
-          basePartsPosi.push(child.position)
+          // basePartsPosi.push(child.position)
           
-          drawLineR(facePartsPosi[2], basePartsPosi[0]);
-          drawLineL(facePartsPosi[3], basePartsPosi[0]);
+          // drawLineR(facePartsPosi[2], basePartsPosi[0]);
+          // drawLineL(facePartsPosi[3], basePartsPosi[0]);
         }
       }, undefined, () => {});
     })
@@ -209,39 +209,41 @@ const showAllParts = () => {
 
   // 顔のパーツを表示
   fixedFacePartsScene.forEach(parts => scene.add(parts))
+  drawLineR(basePartsScene, parts)
+  drawLineL(basePartsScene, parts)
 }
 const drawLineR = (startPos, endPos) => {
-  const bottomCenter = new THREE.Vector3(startPos.x, startPos.y + -0.65, startPos.z + 0.55);
+//   const bottomCenter = new THREE.Vector3(startPos.x, startPos.y + -0.65, startPos.z + 0.55);
 
-// 上面の円の中心座標を設定
-const topCenter = new THREE.Vector3(endPos.x + -0.14, endPos.y + 0.7, endPos.z + 2.1);
+// // 上面の円の中心座標を設定
+// const topCenter = new THREE.Vector3(endPos.x + -0.14, endPos.y + 0.7, endPos.z + 2.1);
 
-// 円柱の高さを設定
-const height = topCenter.distanceTo(bottomCenter);
+// // 円柱の高さを設定
+// const height = topCenter.distanceTo(bottomCenter);
 
-// 円柱の半径を設定（底面の円の半径として利用）
-const bottomRadius = 0.05;
+// // 円柱の半径を設定（底面の円の半径として利用）
+// const bottomRadius = 0.05;
 
-// 円柱のジオメトリ（Geometry）を作成
-const geometry = new THREE.CylinderGeometry(bottomRadius, bottomRadius, height, 32);
+// // 円柱のジオメトリ（Geometry）を作成
+// const geometry = new THREE.CylinderGeometry(bottomRadius, bottomRadius, height, 32);
 
-// 円柱のマテリアルを作成
-const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+// // 円柱のマテリアルを作成
+// const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
 
-// 円柱のメッシュ（Mesh）を作成
-const cylinder = new THREE.Mesh(geometry, material);
+// // 円柱のメッシュ（Mesh）を作成
+// const cylinder = new THREE.Mesh(geometry, material);
 
-// シーンに円柱を追加
-scene.add(cylinder);
-  // const material = new THREE.LineBasicMaterial({ color: 0xffffff , linewidth: 5}); // 緑色の線
+// // シーンに円柱を追加
+// scene.add(cylinder);
+  const material = new THREE.LineBasicMaterial({ color: 0xffffff , linewidth: 5}); // 緑色の線
 
-  // const points = [];
-  // points.push(new THREE.Vector3(startPos.x + -2.25, startPos.y + -0.65, startPos.z + 0.55));
-  // points.push(new THREE.Vector3(endPos.x + -0.14, endPos.y + 0.7, endPos.z + 2.1));
+  const points = [];
+  points.push(new THREE.Vector3(startPos.x + -2.25, startPos.y + -0.65, startPos.z + 0.55));
+  points.push(new THREE.Vector3(endPos.x + -0.14, endPos.y + 0.7, endPos.z + 2.1));
 
-  // const geometry = new THREE.BufferGeometry().setFromPoints(points);
-  // const line = new THREE.Line(geometry, material);
-  // scene.add(line);
+  const geometry = new THREE.BufferGeometry().setFromPoints(points);
+  const line = new THREE.Line(geometry, material);
+  scene.add(line);
 };
 
 const drawLineL = (startPos, endPos) => {
