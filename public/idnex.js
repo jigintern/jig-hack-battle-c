@@ -54,6 +54,8 @@ const onSelectEnd = (event) => {
       // attachでは内部的にaddを呼び出している2ためaddをする必要はありません。
       // 空間に再配置する
       group.attach(object);
+      drawLineR(object.position, basePartsPosi[0]);
+      drawLineL(object.position, basePartsPosi[0]);
       // if (snap) {
       //   object.position.x = Math.floor((object.position.x + snap / 2) / snap) *
       //     snap;
@@ -150,6 +152,7 @@ const loadFaceParts = () => {
           child.scale.z = 5;
           group.add(child);
           facePartsPosi.push(child.position)
+          console.log(facePartsUrls.position);
         }
       }, undefined, () => {});
     })
@@ -187,7 +190,6 @@ const drawLineR = (startPos, endPos) => {
 
   const points = [];
   points.push(new THREE.Vector3(startPos.x + -2.25, startPos.y + -0.65, startPos.z + 0.55));
-  group.add(new THREE.Vector3(startPos.x + -2.25, startPos.y + -0.65, startPos.z + 0.55));
   points.push(new THREE.Vector3(endPos.x + -0.14, endPos.y + 0.7, endPos.z + 2.1));
 
   const geometry = new THREE.BufferGeometry().setFromPoints(points);
@@ -200,7 +202,6 @@ const drawLineL = (startPos, endPos) => {
 
   const points = [];
   points.push(new THREE.Vector3(startPos.x + -1.9, startPos.y + -0.25, startPos.z + 0.5));
-  group.add(new THREE.Vector3(startPos.x + -1.9, startPos.y + -0.25, startPos.z + 0.5));
   points.push(new THREE.Vector3(endPos.x + 0.15, endPos.y + 0.68, endPos.z + 2.2));
 
   const geometry = new THREE.BufferGeometry().setFromPoints(points);
