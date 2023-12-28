@@ -226,7 +226,7 @@
 				return res;
 			}
 			const geometries = getGeometries();
-			const ngeo = geometries.length * nset;
+			const ngeo = geometries.length ;
 			const res = [];
 			for (let i = 0; i < ngeo; i++) {
 				const geometry = geometries[i % geometries.length];
