@@ -148,7 +148,8 @@ const render = () => {
 const animate = () => {
   renderer.setAnimationLoop(render);
 };
-
+// const facePartsPosi = [];
+// const basePartsPosi = [];
 /** 顔のパーツを表示 */
 const loadFaceParts = () => {
   /** GLTFファイルローダー */
@@ -176,11 +177,14 @@ const loadFaceParts = () => {
           // 土台のオブジェクトを保存
           basePartsScene = gltf.scene
           scene.add(gltf.scene);
+          // basePartsPosi.push(child.position)
+          
+          // drawLineR(facePartsPosi[2], basePartsPosi[0]);
+          // drawLineL(facePartsPosi[3], basePartsPosi[0]);
         }
       }, undefined, () => {});
     })
   }
-
   basePartsUrls.forEach(part => loadBaseParts(part))
 }
 
@@ -205,7 +209,61 @@ const showAllParts = () => {
 
   // 顔のパーツを表示
   fixedFacePartsScene.forEach(parts => scene.add(parts))
+  const eyeParts = fixedFacePartsScene.filter(scene => scene.name === 'eye')
+  drawLineR(basePartsScene.position, eyeParts[0].position)
+  drawLineL(basePartsScene.position, eyeParts[1].position)
 }
+const drawLineR = (startPos, endPos) => {
+//   const bottomCenter = new THREE.Vector3(startPos.x, startPos.y + -0.65, startPos.z + 0.55);
+
+// // 上面の円の中心座標を設定
+// const topCenter = new THREE.Vector3(endPos.x + -0.14, endPos.y + 0.7, endPos.z + 2.1);
+
+// // 円柱の高さを設定
+// const height = topCenter.distanceTo(bottomCenter);
+
+// // 円柱の半径を設定（底面の円の半径として利用）
+// const bottomRadius = 0.05;
+
+// // 円柱のジオメトリ（Geometry）を作成
+// const geometry = new THREE.CylinderGeometry(bottomRadius, bottomRadius, height, 32);
+
+// // 円柱のマテリアルを作成
+// const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+
+// // 円柱のメッシュ（Mesh）を作成
+// const cylinder = new THREE.Mesh(geometry, material);
+
+// // シーンに円柱を追加
+// scene.add(cylinder);
+  const material = new THREE.LineBasicMaterial({ color: 0xffffff , linewidth: 5}); // 緑色の線
+
+  const points = [];
+  // points.push(new THREE.Vector3(startPos.x + -2.25, startPos.y + -0.65, startPos.z + 0.55));
+  // points.push(new THREE.Vector3(endPos.x + -0.14, endPos.y + 0.7, endPos.z + 2.1));
+  points.push(new THREE.Vector3(startPos.x + 0.10 * 3, startPos.y + 0.37 * 3, startPos.z + 0.044 * 3));
+  points.push(new THREE.Vector3(endPos.x, endPos.y, endPos.z));
+
+  const geometry = new THREE.BufferGeometry().setFromPoints(points);
+  const line = new THREE.Line(geometry, material);
+  scene.add(line);
+};
+
+const drawLineL = (startPos, endPos) => {
+  const material = new THREE.LineBasicMaterial({ color: 0xffffff , linewidth: 5}); // 緑色の線
+
+  const points = [];
+  // points.push(new THREE.Vector3(startPos.x + -1.9, startPos.y + -0.25, startPos.z + 0.5));
+  // points.push(new THREE.Vector3(endPos.x + 0.15, endPos.y + 0.68, endPos.z + 2.2));
+  points.push(new THREE.Vector3(startPos.x + 0.11 * 3, startPos.y + 0.37 * 3, startPos.z + -0.02 * 3));
+  points.push(new THREE.Vector3(endPos.x, endPos.y, endPos.z));
+
+  const geometry = new THREE.BufferGeometry().setFromPoints(points);
+  const line = new THREE.Line(geometry, material);
+  scene.add(line);
+};
+
+// facePartsPosiの2番目とbasePartsPosiの2番目の要素を線で結ぶ
 
 /** 空間を初期化 */
 const initScene = () => {
@@ -246,9 +304,10 @@ const initScene = () => {
     let geo = [];
     for (let i = 0;i < 4;i++){
       const d = facedata[i % facedata.length];
+      const partsName = d.file.slice(0, 3);
       const faceAspect = d.height / d.width;
       const size = 0.3;
-      geo.push(new THREE.BoxGeometry(size, size * faceAspect,0.001));
+      geo.push({ geo: new THREE.BoxGeometry(size, size * faceAspect,0.001), name: partsName });
     }
     return geo;
   };
@@ -258,7 +317,8 @@ const initScene = () => {
     const ngeo = geometries.length ;
     const res = [];
     for (let i = 0; i < ngeo; i++) {
-      const geometry = geometries[i % geometries.length];
+      const geometry = geometries[i % geometries.length].geo;
+      const name = geometries[i % geometries.length].name;
       const d = facedata[i % facedata.length];
       const material = new THREE.MeshStandardMaterial({
         roughness: 0.0,
@@ -269,6 +329,7 @@ const initScene = () => {
       });
 
       const object = new THREE.Mesh(geometry, material);
+      object.name = name;
       res.push(object);
     }
     return res;
