@@ -131,7 +131,7 @@ const loadFaceParts = () => {
 
   /** 各パーツのURL */
   const basePartsUrls = ['./fujisan.glb']
-  const facePartsUrls = ['./mouth.glb', './nose.glb', './right-eye.glb', './left-eye.glb']
+  const facePartsUrls = ['./mouth.glb', './nose.glb', './righteye.glb', './lefteye.glb']
 
   // 顔のパーツをロードして配置
   const loadFaceParts = (url) => {
@@ -144,9 +144,9 @@ const loadFaceParts = () => {
           child.position.z = -1;
           child.rotation.x = Math.PI / 2;
           child.rotation.z = Math.PI / 2;
-          child.scale.x = 0.02;
-          child.scale.y = 0.02;
-          child.scale.z = 0.02;
+          child.scale.x = 5;
+          child.scale.y = 5;
+          child.scale.z = 5;
           group.add(child);
         }
       }, undefined, () => {});
