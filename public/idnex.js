@@ -209,8 +209,9 @@ const showAllParts = () => {
 
   // 顔のパーツを表示
   fixedFacePartsScene.forEach(parts => scene.add(parts))
-  drawLineR(basePartsScene, parts)
-  drawLineL(basePartsScene, parts)
+  const eyeParts = fixedFacePartsScene.filter(scene => scene.name === 'eye')
+  drawLineR(basePartsScene, eyeParts[0])
+  drawLineL(basePartsScene, eyeParts[1])
 }
 const drawLineR = (startPos, endPos) => {
 //   const bottomCenter = new THREE.Vector3(startPos.x, startPos.y + -0.65, startPos.z + 0.55);
@@ -299,9 +300,10 @@ const initScene = () => {
     let geo = [];
     for (let i = 0;i < 4;i++){
       const d = facedata[i % facedata.length];
+      const partsName = d.file.slice(0, 3);
       const faceAspect = d.height / d.width;
       const size = 0.3;
-      geo.push(new THREE.BoxGeometry(size, size * faceAspect,0.001));
+      geo.push({ geo: new THREE.BoxGeometry(size, size * faceAspect,0.001), name: partsName });
     }
     return geo;
   };
@@ -311,7 +313,8 @@ const initScene = () => {
     const ngeo = geometries.length ;
     const res = [];
     for (let i = 0; i < ngeo; i++) {
-      const geometry = geometries[i % geometries.length];
+      const geometry = geometries[i % geometries.length].geo;
+      const name = geometries[i % geometries.length].name;
       const d = facedata[i % facedata.length];
       const material = new THREE.MeshStandardMaterial({
         roughness: 0.0,
@@ -322,6 +325,7 @@ const initScene = () => {
       });
 
       const object = new THREE.Mesh(geometry, material);
+      object.name = name;
       res.push(object);
     }
     return res;
