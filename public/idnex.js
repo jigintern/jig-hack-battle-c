@@ -255,7 +255,7 @@ const drawLineL = (startPos, endPos) => {
   const points = [];
   // points.push(new THREE.Vector3(startPos.x + -1.9, startPos.y + -0.25, startPos.z + 0.5));
   // points.push(new THREE.Vector3(endPos.x + 0.15, endPos.y + 0.68, endPos.z + 2.2));
-  points.push(new THREE.Vector3(startPos.x, startPos.y, startPos.z));
+  points.push(new THREE.Vector3(startPos.x + 0.11 * 3, startPos.y + 0.37 * 3, startPos.z + -0.02 * 3));
   points.push(new THREE.Vector3(endPos.x, endPos.y, endPos.z));
 
   const geometry = new THREE.BufferGeometry().setFromPoints(points);
