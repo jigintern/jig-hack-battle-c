@@ -206,12 +206,13 @@ const hidePartsFromGroup = (part) => {
 const showAllParts = () => {
   // 土台を表示
   scene.add(basePartsScene)
+  console.loge(basePartsScene)
 
   // 顔のパーツを表示
   fixedFacePartsScene.forEach(parts => scene.add(parts))
   const eyeParts = fixedFacePartsScene.filter(scene => scene.name === 'eye')
-  drawLineR(basePartsScene, eyeParts[0])
-  drawLineL(basePartsScene, eyeParts[1])
+  drawLineR(basePartsScene.position, eyeParts[0].position)
+  drawLineL(basePartsScene.position, eyeParts[1].position)
 }
 const drawLineR = (startPos, endPos) => {
 //   const bottomCenter = new THREE.Vector3(startPos.x, startPos.y + -0.65, startPos.z + 0.55);
