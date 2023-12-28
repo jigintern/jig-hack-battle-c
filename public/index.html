@@ -192,7 +192,7 @@
 			for (let i = 0;i < 4;i++){
 				const d = facedata[i % facedata.length];
 				const faceAspect = d.height / d.width;
-				const size = 0.2;
+				const size = 0.3;
 				geo.push(new THREE.BoxGeometry(size, size * faceAspect,0.001));
 			}
 			return geo;
@@ -247,7 +247,7 @@
 	
 		const objs = getObjects();
 		for (const object of objs) {
-			object.position.x = Math.random()*3 - 0.75;
+			object.position.x =0;
 			object.position.y = Math.random()*3 - 0.75;
 			object.position.z = 2;
 	
