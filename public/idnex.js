@@ -47,10 +47,6 @@ scene.add( cube );
     showAllParts()
     return
   }
-  const geometry = new THREE.BoxGeometry( 1, 1, 1 ); 
-  const material = new THREE.MeshBasicMaterial( {color: 0x00ff00} ); 
-  const cube = new THREE.Mesh( geometry, material ); 
-  scene.add( cube );
 
   const controller = event.target;
   const intersections = getIntersections(controller);
