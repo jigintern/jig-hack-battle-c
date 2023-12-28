@@ -208,10 +208,10 @@ const showAllParts = () => {
   scene.add(basePartsScene)
 
   // 顔のパーツを表示
-  fixedFacePartsScene.forEach(parts => scene.add(parts))
-  const eyeParts = fixedFacePartsScene.filter(scene => scene.name === 'eye')
-  drawLineR(basePartsScene.position, eyeParts[0].position)
-  drawLineL(basePartsScene.position, eyeParts[1].position)
+  fixedFacePartsScene.forEach(parts => scene.add(parts));
+  const eyeParts = fixedFacePartsScene.filter(scene => scene.name === 'eye');
+  drawLineR(basePartsScene.position, eyeParts[0].position);
+  drawLineL(basePartsScene.position, eyeParts[1].position);
 }
 const drawLineR = (startPos, endPos) => {
 //   const bottomCenter = new THREE.Vector3(startPos.x, startPos.y + -0.65, startPos.z + 0.55);
@@ -404,6 +404,8 @@ const init = () => {
 
   // コントローラーを設定
   setControllers()
+  const axes = new THREE.AxisHelper(25);
+  scene.add(axes)
 
   // レイキャスティング
   // マウスピッキング（マウスが3D空間のどのオブジェクトの上にあるかを調べること）などに使わる。
