@@ -115,9 +115,6 @@
 					object.rotation.x = Math.floor((object.rotation.x + dsnap / 2) / dsnap) * dsnap;
 					object.rotation.y = Math.floor((object.rotation.y + dsnap / 2) / dsnap) * dsnap;
 					object.rotation.z = Math.floor((object.rotation.z + dsnap / 2) / dsnap) * dsnap;
-					// object.material.
-					object.material.alphaToCoverage = true; // 追加
-					object.material.opacity = 0;
 				}
 			}
 			controller.userData.selected = undefined;
@@ -166,9 +163,6 @@
 	};
 	
 	import { CSV } from "https://js.sabae.cc/CSV.js";
-	// import * as eg from "https://js.sabae.cc/egvr.js";
-	// eg.model("./fujisan.glb", 0, 0, 0, 0, 2);
-	
 	const facedata = await CSV.fetchJSON("./faceParts.csv");
 	
 	const init = () => {
@@ -233,7 +227,7 @@
 				return res;
 			}
 			const geometries = getGeometries();
-			const ngeo = geometries.length * nset;
+			const ngeo = geometries.length;
 			const res = [];
 			for (let i = 0; i < ngeo; i++) {
 				const geometry = geometries[i % geometries.length];
@@ -241,7 +235,6 @@
 					return Math.random() * 0x1000000;
 				};
 				const material = new THREE.MeshStandardMaterial({
-					// color: getColor(),
 					roughness: 0.0,
 					metalness: 0.0,
 					map:new THREE.TextureLoader().load("eye1.png"),
@@ -264,9 +257,14 @@
 			object.rotation.x = Math.random() * 2 * Math.PI;
 			object.rotation.y = Math.random() * 2 * Math.PI;
 			object.rotation.z = Math.random() * 2 * Math.PI;
+			console.log(object.position.x);
+			console.log(object.position.y);
+			console.log(object.position.z);
+			console.log(object.rotation.x);
+			console.log(object.rotation.y);
+			console.log(object.rotation.z);
 	
 			//object.scale.setScalar(Math.random() / 2 + 0.5);
-	
 			group.add(object);
 		}
 	
