@@ -160,12 +160,15 @@ const loadFaceParts = () => {
   const loadBaseParts = (url) => {
     loader.load(url, gltf => {
       const object = gltf.scene;
+      gltf.scene.position.y = -1;
+      gltf.scene.rotation.x = Math.PI / 2;
+      gltf.scene.rotation.y = 0;
       object.traverse(function (child) {
         if (child.isMesh) {
           child.position.x = 0;
           child.position.y = 0;
           child.position.z = -1;
-          child.rotation.x = Math.PI / 9;
+          child.rotation.x = Math.PI / 2;
           child.rotation.z = Math.PI / 2;
           child.scale.x = 3;
           child.scale.y = 3;
