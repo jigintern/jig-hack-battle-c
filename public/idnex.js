@@ -3,6 +3,9 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js"; // for P
 import { ARButton } from "three/addons/webxr/ARButton.js";
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
+import { CSV } from "https://js.sabae.cc/CSV.js";
+const facedata = await CSV.fetchJSON("./faceParts.csv");
+
 let camera, scene, renderer;
 let controller1, controller2;
 let raycaster;
@@ -259,6 +262,52 @@ const initScene = () => {
   group = new THREE.Group();
   scene.add(group);
 
+  const getGeometries = () => {
+    let geo = [];
+    for (let i = 0;i < 4;i++){
+      const d = facedata[i % facedata.length];
+      const faceAspect = d.height / d.width;
+      const size = 0.3;
+      geo.push(new THREE.BoxGeometry(size, size * faceAspect,0.001));
+    }
+    return geo;
+  };
+
+  const getObjects = () => {
+    const geometries = getGeometries();
+    const ngeo = geometries.length ;
+    const res = [];
+    for (let i = 0; i < ngeo; i++) {
+      const geometry = geometries[i % geometries.length];
+      const d = facedata[i % facedata.length];
+      const material = new THREE.MeshStandardMaterial({
+        roughness: 0.0,
+        metalness: 0.0,
+        map:new THREE.TextureLoader().load(d.file),
+        transparent: 0.8 < 1.0,
+        opacity:0.8,
+      });
+
+      const object = new THREE.Mesh(geometry, material);
+      res.push(object);
+    }
+    return res;
+  };
+
+  const objs = getObjects();
+  for (const object of objs) {
+    object.position.x = Math.random() - 0.5;
+    object.position.y = Math.random() - 0.5;
+    object.position.z = 2;
+
+    object.rotation.x = 0;
+    object.rotation.y = 0;
+    object.rotation.z = Math.random() * 2 * Math.PI;
+
+    //object.scale.setScalar(Math.random() / 2 + 0.5);
+    group.add(object);
+  }
+
   // 3Dモデルを画面に表示するためのレンダラー
   renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setPixelRatio(window.devicePixelRatio);
@@ -310,7 +359,7 @@ const init = () => {
   initScene()
 
   // 顔のパーツを表示
-  loadFaceParts()
+ // loadFaceParts()
 
   // コントローラーを設定
   setControllers()
