@@ -162,7 +162,7 @@ const loadFaceParts = () => {
       const object = gltf.scene;
       gltf.scene.position.y = -1;
       gltf.scene.rotation.x = Math.PI / 2;
-      gltf.scene.rotation.y = 0;
+      gltf.scene.rotation.y = Math.PI;
       object.traverse(function (child) {
         if (child.isMesh) {
           child.position.x = 0;
