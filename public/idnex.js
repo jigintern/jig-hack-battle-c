@@ -123,7 +123,8 @@ const render = () => {
 const animate = () => {
   renderer.setAnimationLoop(render);
 };
-
+const facePartsPosi = [];
+const basePartsPosi = [];
 /** 顔のパーツを表示 */
 const loadFaceParts = () => {
   /** GLTFファイルローダー */
@@ -148,6 +149,7 @@ const loadFaceParts = () => {
           child.scale.y = 5;
           child.scale.z = 5;
           group.add(child);
+          facePartsPosi.push(child.position)
         }
       }, undefined, () => {});
     })
@@ -168,14 +170,33 @@ const loadFaceParts = () => {
           child.scale.y = 3;
           child.scale.z = 3;
           scene.add(gltf.scene);
+          basePartsPosi.push(child.position)
+          const indexFace = 2; // 2番目の要素のインデックス
+          const indexBase = 0; // 2番目の要素のインデックス
+          
+          drawLine(facePartsPosi[indexFace], basePartsPosi[indexBase]);
+          console.log(facePartsPosi[indexFace], basePartsPosi[indexBase])
         }
       }, undefined, () => {});
     })
   }
-
   basePartsUrls.forEach(part => loadBaseParts(part))
   facePartsUrls.forEach(part => loadFaceParts(part))
+
 }
+const drawLine = (startPos, endPos) => {
+  const material = new THREE.LineBasicMaterial({ color: 0x00ff00 , linewidth: 5}); // 緑色の線
+
+  const points = [];
+  points.push(new THREE.Vector3(startPos.x + -2.25, startPos.y + -0.65, startPos.z + 0.55));
+  points.push(new THREE.Vector3(endPos.x + -0.14, endPos.y + 0.7, endPos.z + 2.1));
+
+  const geometry = new THREE.BufferGeometry().setFromPoints(points);
+  const line = new THREE.Line(geometry, material);
+  scene.add(line);
+};
+
+// facePartsPosiの2番目とbasePartsPosiの2番目の要素を線で結ぶ
 
 /** 空間を初期化 */
 const initScene = () => {
