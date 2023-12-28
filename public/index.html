@@ -247,13 +247,13 @@
 	
 		const objs = getObjects();
 		for (const object of objs) {
-			object.position.x = Math.random()*5 - 1.25;
-			object.position.y = Math.random()*5 - 1.25;
+			object.position.x = Math.random()*3 - 0.75;
+			object.position.y = Math.random()*3 - 0.75;
 			object.position.z = 3;
 	
 			object.rotation.x = 0;
 			object.rotation.y = 0;
-			object.rotation.z = 0;
+			object.rotation.z = Math.random() * 2 * Math.PI;
 	
 			//object.scale.setScalar(Math.random() / 2 + 0.5);
 			group.add(object);
