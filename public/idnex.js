@@ -166,7 +166,7 @@ const loadFaceParts = () => {
       object.traverse(function (child) {
         if (child.isMesh) {
           child.position.x = 0;
-          child.position.y = 0;
+          child.position.y = -1;
           child.position.z = -1;
           child.rotation.x = Math.PI / 2;
           child.rotation.z = Math.PI / 2;
