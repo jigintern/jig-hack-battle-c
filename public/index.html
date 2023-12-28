@@ -219,56 +219,6 @@
 				new THREE.BoxGeometry(0.6, 0.8, 0.001),
 			];
 		};
-		
-		//2d表示追加分
-		const makeface = (options) => {
-			// テクスチャ読み込み
-			const textureLoader = new THREE.TextureLoader();
-			const texture = textureLoader.load(options.file);
-			const face1aspect = options.height / options.width;
-			
-			// 平面ジオメトリの生成
-			const sw = 1;
-			const size = options.size;
-			const planeGeometry = new THREE.PlaneGeometry(size, size * face1aspect, sw, 1);
-			const material = new THREE.MeshBasicMaterial({
-				map: texture,
-				transparent: true,
-				side: THREE.DoubleSide,
-				//color: 0xFF0000, wireframe: true,
-			});
-			const mesh = new THREE.Mesh(planeGeometry, material);
-			mesh.animate = (t) => {
-				// 場所設定
-				const th = mesh.th + t * 0;
-				mesh.position.x = Math.cos(th) * mesh.r * options.x;
-				mesh.position.z = Math.sin(th) * mesh.r;
-				mesh.position.x = Math.random() -0.5;
-				mesh.position.z = -1.5;
-				mesh.rotation.y = Math.atan2(mesh.position.x, mesh.position.z)  - Math.PI;
-				group.add(mesh);
-			};
-			return mesh;
-		};
-		const faces = [];
-		for (let i = 0; i < 4; i++) {
-			const d = facedata[i % facedata.length];
-			const face = makeface(d);
-			scene.add(face);
-			face.position.y = 1.5 * d.y;
-			face.position.y = Math.random();
-			face.r = .5;
-			face.th = Math.PI*0.5;
-			faces.push(face);
-		}
-		//2dジオメトリの描画
-		const t0 = performance.now();
-		const t = t0 - performance.now();
-		for (const face of faces) {
-			face.animate(t);
-		}
-	
-	
 	
 		const getObjects = () => {
 			if (geometry == "megane") {
@@ -285,21 +235,13 @@
 			for (let i = 0; i < ngeo; i++) {
 				const geometry = geometries[i % geometries.length];
 				const getColor = () => {
-					if (monocolor !== undefined) {
-						return parseInt(monocolor, 16);
-					}
-					if (grayscale) {
-						const nc = (Math.random() * 0x100) >> 0;
-						const color = (nc << 16) | (nc << 8) | nc;
-						return color;
-					}
 					return Math.random() * 0x1000000;
 				};
 				const material = new THREE.MeshStandardMaterial({
-					color: getColor(),
-					roughness: 1.0,
+					// color: getColor(),
+					roughness: 0.0,
 					metalness: 0.0,
-					map:new THREE.TextureLoader().load("lips.png"),
+					map:new THREE.TextureLoader().load("eye1.png"),
 					transparent: opacity < 1.0,
 					opacity,
 				});
