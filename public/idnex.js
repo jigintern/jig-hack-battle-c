@@ -8,6 +8,12 @@ let controller1, controller2;
 let raycaster;
 let group;
 
+/** ベースのパーツ */
+let basePartsScene = undefined
+
+/** 配置したパーツ */
+const fixedFacePartsScene = []
+
 /** 光線と交差しているオブジェクト */
 const intersected = [];
 const tempMatrix = new THREE.Matrix4();
@@ -27,15 +33,28 @@ const isTouch = (intersection) => {
 
 /** トリガーを引いた時 */
 const onSelectStart = (event) => {
+  // 「A」ボタンを押したがらトリガーを引いた時
+  if (controller1.gamePadRef.buttons[4].pressed) {
+    // 全てのパーツを表示する
+    showAllParts()
+    return
+  }
+
   const controller = event.target;
   const intersections = getIntersections(controller);
   const objects = [];
   for (const intersection of intersections) {
+    // 顔のパーツを動かし始めたら土台のオブジェクトを消す
+    hidePartsFromScene(basePartsScene)
+
     const object = intersection.object;
     // object.material.emissive.b = 1;
     // コントローラーに付与 (付随して動かすようにする)
     controller.attach(object);
     objects.push(object);
+
+    // 配置したパーツの配列に追加
+    fixedFacePartsScene.push(object)
     if (isTouch(intersection)) {
       break;
     }
@@ -44,7 +63,7 @@ const onSelectStart = (event) => {
   controller.userData.selected = objects;
 };
 
-/** トリガーを話した時 */
+/** トリガーを離した時 */
 const onSelectEnd = (event) => {
   const controller = event.target;
   if (controller.userData.selected !== undefined) {
@@ -54,6 +73,9 @@ const onSelectEnd = (event) => {
       // attachでは内部的にaddを呼び出している2ためaddをする必要はありません。
       // 空間に再配置する
       group.attach(object);
+
+      // 顔のパーツを動かしたら消す
+      hidePartsFromGroup(object)
       // if (snap) {
       //   object.position.x = Math.floor((object.position.x + snap / 2) / snap) *
       //     snap;
@@ -167,6 +189,8 @@ const loadFaceParts = () => {
           child.scale.x = 3;
           child.scale.y = 3;
           child.scale.z = 3;
+          // 土台のオブジェクトを保存
+          basePartsScene = gltf.scene
           scene.add(gltf.scene);
         }
       }, undefined, () => {});
@@ -175,6 +199,29 @@ const loadFaceParts = () => {
 
   basePartsUrls.forEach(part => loadBaseParts(part))
   facePartsUrls.forEach(part => loadFaceParts(part))
+}
+
+/**
+ * ベースのパーツを消す
+ */
+const hidePartsFromScene = (part) => {
+  scene.remove(part)
+}
+
+/**
+ * 顔のパーツをパーツを消す
+ */
+const hidePartsFromGroup = (part) => {
+  group.remove(part)
+}
+
+/** 全てのパーツを表示する */
+const showAllParts = () => {
+  // 土台を表示
+  scene.add(basePartsScene)
+
+  // 顔のパーツを表示
+  fixedFacePartsScene.forEach(parts => scene.add(parts))
 }
 
 /** 空間を初期化 */
@@ -228,6 +275,10 @@ const setControllers = () => {
   controller1 = renderer.xr.getController(0);
   controller1.addEventListener("selectstart", onSelectStart);
   controller1.addEventListener("selectend", onSelectEnd);
+  controller1.addEventListener("connected", (e) => {
+    // パッドを登録
+    controller1.gamePadRef = e.data.gamepad
+})
   scene.add(controller1);
 
   controller2 = renderer.xr.getController(1);
