@@ -115,6 +115,8 @@
 					object.rotation.x = Math.floor((object.rotation.x + dsnap / 2) / dsnap) * dsnap;
 					object.rotation.y = Math.floor((object.rotation.y + dsnap / 2) / dsnap) * dsnap;
 					object.rotation.z = Math.floor((object.rotation.z + dsnap / 2) / dsnap) * dsnap;
+					// object.material.
+					object.material.opacity = 0;
 				}
 			}
 			controller.userData.selected = undefined;
