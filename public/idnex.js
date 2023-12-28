@@ -206,7 +206,6 @@ const hidePartsFromGroup = (part) => {
 const showAllParts = () => {
   // 土台を表示
   scene.add(basePartsScene)
-  console.loge(basePartsScene)
 
   // 顔のパーツを表示
   fixedFacePartsScene.forEach(parts => scene.add(parts))
