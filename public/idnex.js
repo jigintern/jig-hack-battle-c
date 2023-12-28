@@ -204,8 +204,8 @@ const showAllParts = () => {
   // 顔のパーツを表示
   fixedFacePartsScene.forEach(parts => scene.add(parts));
   const eyeParts = fixedFacePartsScene.filter(scene => scene.name === 'eye');
-  drawLineR(basePartsScene.position, eyeParts[0].position);
-  drawLineL(basePartsScene.position, eyeParts[1].position);
+  // drawLineR(basePartsScene.position, eyeParts[0].position);
+  // drawLineL(basePartsScene.position, eyeParts[1].position);
 }
 const drawLineR = (startPos, endPos) => {
 //   const bottomCenter = new THREE.Vector3(startPos.x, startPos.y + -0.65, startPos.z + 0.55);
