@@ -187,6 +187,7 @@ const drawLineR = (startPos, endPos) => {
 
   const points = [];
   points.push(new THREE.Vector3(startPos.x + -2.25, startPos.y + -0.65, startPos.z + 0.55));
+  group.add(new THREE.Vector3(startPos.x + -2.25, startPos.y + -0.65, startPos.z + 0.55));
   points.push(new THREE.Vector3(endPos.x + -0.14, endPos.y + 0.7, endPos.z + 2.1));
 
   const geometry = new THREE.BufferGeometry().setFromPoints(points);
@@ -199,6 +200,7 @@ const drawLineL = (startPos, endPos) => {
 
   const points = [];
   points.push(new THREE.Vector3(startPos.x + -1.9, startPos.y + -0.25, startPos.z + 0.5));
+  group.add(new THREE.Vector3(startPos.x + -1.9, startPos.y + -0.25, startPos.z + 0.5));
   points.push(new THREE.Vector3(endPos.x + 0.15, endPos.y + 0.68, endPos.z + 2.2));
 
   const geometry = new THREE.BufferGeometry().setFromPoints(points);
