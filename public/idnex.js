@@ -3,6 +3,9 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js"; // for P
 import { ARButton } from "three/addons/webxr/ARButton.js";
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
+import { CSV } from "https://js.sabae.cc/CSV.js";
+const facedata = await CSV.fetchJSON("./faceParts.csv");
+
 let camera, scene, renderer;
 let controller1, controller2;
 let raycaster;
@@ -153,32 +156,13 @@ const loadFaceParts = () => {
 
   /** 各パーツのURL */
   const basePartsUrls = ['./fujisan.glb']
-  const facePartsUrls = ['./mouth.glb', './nose.glb', './righteye.glb', './lefteye.glb']
-
-  // 顔のパーツをロードして配置
-  const loadFaceParts = (url) => {
-    loader.load(url, gltf => {
-      const object = gltf.scene;
-      object.traverse(function (child) {
-        if (child.isMesh) {
-          child.position.x = 0;
-          child.position.y = 0;
-          child.position.z = -1;
-          child.rotation.x = Math.PI / 2;
-          child.rotation.z = Math.PI / 2;
-          child.scale.x = 5;
-          child.scale.y = 5;
-          child.scale.z = 5;
-          group.add(child);
-        }
-      }, undefined, () => {});
-    })
-  }
-
   // 顔の土台をロードして配置
   const loadBaseParts = (url) => {
     loader.load(url, gltf => {
       const object = gltf.scene;
+      gltf.scene.position.y = 0;
+      gltf.scene.rotation.x = Math.PI / 2;
+      gltf.scene.rotation.y = Math.PI;
       object.traverse(function (child) {
         if (child.isMesh) {
           child.position.x = 0;
@@ -198,7 +182,6 @@ const loadFaceParts = () => {
   }
 
   basePartsUrls.forEach(part => loadBaseParts(part))
-  facePartsUrls.forEach(part => loadFaceParts(part))
 }
 
 /**
@@ -258,6 +241,52 @@ const initScene = () => {
   // 入れ子構造として設計することで、複数の3Dオブジェクトをまとめて移動させたり、回転させたりするのが便利になる
   group = new THREE.Group();
   scene.add(group);
+
+  const getGeometries = () => {
+    let geo = [];
+    for (let i = 0;i < 4;i++){
+      const d = facedata[i % facedata.length];
+      const faceAspect = d.height / d.width;
+      const size = 0.3;
+      geo.push(new THREE.BoxGeometry(size, size * faceAspect,0.001));
+    }
+    return geo;
+  };
+
+  const getObjects = () => {
+    const geometries = getGeometries();
+    const ngeo = geometries.length ;
+    const res = [];
+    for (let i = 0; i < ngeo; i++) {
+      const geometry = geometries[i % geometries.length];
+      const d = facedata[i % facedata.length];
+      const material = new THREE.MeshStandardMaterial({
+        roughness: 0.0,
+        metalness: 0.0,
+        map:new THREE.TextureLoader().load(d.file),
+        transparent: 0.8 < 1.0,
+        opacity:0.8,
+      });
+
+      const object = new THREE.Mesh(geometry, material);
+      res.push(object);
+    }
+    return res;
+  };
+
+  const objs = getObjects();
+  for (const object of objs) {
+    object.position.x = Math.random() - 0.5;
+    object.position.y = Math.random() - 0.5;
+    object.position.z = 2;
+
+    object.rotation.x = 0;
+    object.rotation.y = 0;
+    object.rotation.z = Math.random() * 2 * Math.PI;
+
+    //object.scale.setScalar(Math.random() / 2 + 0.5);
+    group.add(object);
+  }
 
   // 3Dモデルを画面に表示するためのレンダラー
   renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
