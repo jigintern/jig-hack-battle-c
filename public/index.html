@@ -1,52 +1,52 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><link rel="icon" href="data:">
-<title>AR Tsumiki</title>
-</head>
-<body>
-
-<div id="info">
-	AR Tsumiki forked <a href=https://code4fukui.github.io/three.js_examples/?q=webxr#webxr_ar_dragging>ar - dragging</a> / <a href="https://threejs.org">three.js</a><br>
-	<a href="./">colorfull</a><br>
-	<a href="?grayscale=true">grayscale</a><br>
-	<a href="?grayscale=true&opacity=1.0">gray scale and no transparency</a><br>
-	<a href="?opacity=1.0">colorfull and no transparency</a><br>
-	<a href="?geometry=jig&nset=1&monocolor=ffffff&opacity=1.0&snap=0.15">jig.jp puzzle</a><br>
-	<a href="?geometry=megane&nset=30">MeganeFes version</a><br>
-</div>
-
-<style>
-body {
-	margin: 0;
-	background-color: #eee;
-	font-family: sans-serif;
-}
-#info {
-	position: absolute;
-	background-color: rgba(155, 155, 155, 0.5);
-	padding: 0.5em;
-	margin: 0.5em;
-	color: #111;
-}
-a {
-	color: #228 !important;
-}
-#ARButton {
-	color: black !important;
-	border: 1px solid black !important;
-}
-</style>
-
-<!-- Import maps polyfill -->
-<!-- Remove this when import maps will be widely supported -->
-<script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
-
-<script type="importmap">
-{
-	"imports": {
-		"three": "https://code4fukui.github.io/three.js/build/three.module.js",
-		"three/addons/": "https://code4fukui.github.io/three.js/examples/jsm/"
+	<title>AR Fukuwarai</title>
+	</head>
+	<body>
+	
+	<div id="info">
+		AR Tsumiki forked <a href=https://code4fukui.github.io/three.js_examples/?q=webxr#webxr_ar_dragging>ar - dragging</a> / <a href="https://threejs.org">three.js</a><br>
+		<a href="./">colorfull</a><br>
+		<a href="?grayscale=true">grayscale</a><br>
+		<a href="?grayscale=true&opacity=1.0">gray scale and no transparency</a><br>
+		<a href="?opacity=1.0">colorfull and no transparency</a><br>
+		<a href="?geometry=jig&nset=1&monocolor=ffffff&opacity=1.0&snap=0.15">jig.jp puzzle</a><br>
+		<a href="?geometry=megane&nset=30">MeganeFes version</a><br>
+	</div>
+	
+	<style>
+	body {
+		margin: 0;
+		background-color: #eee;
+		font-family: sans-serif;
 	}
-}
-</script>
-<script type="module" src="./idnex.js"></script>
-</body>
-</html>
+	#info {
+		position: absolute;
+		background-color: rgba(155, 155, 155, 0.5);
+		padding: 0.5em;
+		margin: 0.5em;
+		color: #111;
+	}
+	a {
+		color: #228 !important;
+	}
+	#ARButton {
+		color: black !important;
+		border: 1px solid black !important;
+	}
+	</style>
+	
+	<!-- Import maps polyfill -->
+	<!-- Remove this when import maps will be widely supported -->
+	<script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
+	
+	<script type="importmap">
+	{
+		"imports": {
+			"three": "https://code4fukui.github.io/three.js/build/three.module.js",
+			"three/addons/": "https://code4fukui.github.io/three.js/examples/jsm/"
+		}
+	}
+	</script>
+	<script src="./idnex.js" type="module"></script>
+	</body>
+	</html>

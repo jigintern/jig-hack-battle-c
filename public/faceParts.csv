@@ -1,0 +1,5 @@
+file,size,width,height,x,y
+eye1.png,0.5,281,146,-1,0
+eye2.png,0.5,276,128,0,-0.5
+nose.png,0.5,265,427,-0.5,0
+lips.png,0.5,380,169,-0.5,-0.5

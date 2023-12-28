@@ -3,10 +3,19 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js"; // for P
 import { ARButton } from "three/addons/webxr/ARButton.js";
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
+import { CSV } from "https://js.sabae.cc/CSV.js";
+const facedata = await CSV.fetchJSON("./faceParts.csv");
+
 let camera, scene, renderer;
 let controller1, controller2;
 let raycaster;
 let group;
+
+/** ベースのパーツ */
+let basePartsScene = undefined
+
+/** 配置したパーツ */
+const fixedFacePartsScene = []
 
 /** 光線と交差しているオブジェクト */
 const intersected = [];
@@ -27,15 +36,28 @@ const isTouch = (intersection) => {
 
 /** トリガーを引いた時 */
 const onSelectStart = (event) => {
+  // 「A」ボタンを押したがらトリガーを引いた時
+  if (controller1.gamePadRef.buttons[4].pressed) {
+    // 全てのパーツを表示する
+    showAllParts()
+    return
+  }
+
   const controller = event.target;
   const intersections = getIntersections(controller);
   const objects = [];
   for (const intersection of intersections) {
+    // 顔のパーツを動かし始めたら土台のオブジェクトを消す
+    hidePartsFromScene(basePartsScene)
+
     const object = intersection.object;
     // object.material.emissive.b = 1;
     // コントローラーに付与 (付随して動かすようにする)
     controller.attach(object);
     objects.push(object);
+
+    // 配置したパーツの配列に追加
+    fixedFacePartsScene.push(object)
     if (isTouch(intersection)) {
       break;
     }
@@ -44,7 +66,7 @@ const onSelectStart = (event) => {
   controller.userData.selected = objects;
 };
 
-/** トリガーを話した時 */
+/** トリガーを離した時 */
 const onSelectEnd = (event) => {
   const controller = event.target;
   if (controller.userData.selected !== undefined) {
@@ -54,8 +76,9 @@ const onSelectEnd = (event) => {
       // attachでは内部的にaddを呼び出している2ためaddをする必要はありません。
       // 空間に再配置する
       group.attach(object);
-      drawLineR(object.position, basePartsPosi[0]);
-      drawLineL(object.position, basePartsPosi[0]);
+
+      // 顔のパーツを動かしたら消す
+      hidePartsFromGroup(object)
       // if (snap) {
       //   object.position.x = Math.floor((object.position.x + snap / 2) / snap) *
       //     snap;
@@ -134,34 +157,13 @@ const loadFaceParts = () => {
 
   /** 各パーツのURL */
   const basePartsUrls = ['./fujisan.glb']
-  const facePartsUrls = ['./mouth.glb', './nose.glb', './righteye.glb', './lefteye.glb']
-
-  // 顔のパーツをロードして配置
-  const loadFaceParts = (url) => {
-    loader.load(url, gltf => {
-      const object = gltf.scene;
-      object.traverse(function (child) {
-        if (child.isMesh) {
-          child.position.x = 0;
-          child.position.y = 0;
-          child.position.z = -1;
-          child.rotation.x = Math.PI / 2;
-          child.rotation.z = Math.PI / 2;
-          child.scale.x = 5;
-          child.scale.y = 5;
-          child.scale.z = 5;
-          group.add(child);
-          facePartsPosi.push(child.position)
-          console.log(facePartsUrls.position);
-        }
-      }, undefined, () => {});
-    })
-  }
-
   // 顔の土台をロードして配置
   const loadBaseParts = (url) => {
     loader.load(url, gltf => {
       const object = gltf.scene;
+      gltf.scene.position.y = 0;
+      gltf.scene.rotation.x = Math.PI / 2;
+      gltf.scene.rotation.y = Math.PI;
       object.traverse(function (child) {
         if (child.isMesh) {
           child.position.x = 0;
@@ -172,6 +174,8 @@ const loadFaceParts = () => {
           child.scale.x = 3;
           child.scale.y = 3;
           child.scale.z = 3;
+          // 土台のオブジェクトを保存
+          basePartsScene = gltf.scene
           scene.add(gltf.scene);
           basePartsPosi.push(child.position)
           
@@ -182,8 +186,29 @@ const loadFaceParts = () => {
     })
   }
   basePartsUrls.forEach(part => loadBaseParts(part))
-  facePartsUrls.forEach(part => loadFaceParts(part))
+}
 
+/**
+ * ベースのパーツを消す
+ */
+const hidePartsFromScene = (part) => {
+  scene.remove(part)
+}
+
+/**
+ * 顔のパーツをパーツを消す
+ */
+const hidePartsFromGroup = (part) => {
+  group.remove(part)
+}
+
+/** 全てのパーツを表示する */
+const showAllParts = () => {
+  // 土台を表示
+  scene.add(basePartsScene)
+
+  // 顔のパーツを表示
+  fixedFacePartsScene.forEach(parts => scene.add(parts))
 }
 const drawLineR = (startPos, endPos) => {
   const bottomCenter = new THREE.Vector3(startPos.x, startPos.y + -0.65, startPos.z + 0.55);
@@ -268,6 +293,52 @@ const initScene = () => {
   group = new THREE.Group();
   scene.add(group);
 
+  const getGeometries = () => {
+    let geo = [];
+    for (let i = 0;i < 4;i++){
+      const d = facedata[i % facedata.length];
+      const faceAspect = d.height / d.width;
+      const size = 0.3;
+      geo.push(new THREE.BoxGeometry(size, size * faceAspect,0.001));
+    }
+    return geo;
+  };
+
+  const getObjects = () => {
+    const geometries = getGeometries();
+    const ngeo = geometries.length ;
+    const res = [];
+    for (let i = 0; i < ngeo; i++) {
+      const geometry = geometries[i % geometries.length];
+      const d = facedata[i % facedata.length];
+      const material = new THREE.MeshStandardMaterial({
+        roughness: 0.0,
+        metalness: 0.0,
+        map:new THREE.TextureLoader().load(d.file),
+        transparent: 0.8 < 1.0,
+        opacity:0.8,
+      });
+
+      const object = new THREE.Mesh(geometry, material);
+      res.push(object);
+    }
+    return res;
+  };
+
+  const objs = getObjects();
+  for (const object of objs) {
+    object.position.x = Math.random() - 0.5;
+    object.position.y = Math.random() - 0.5;
+    object.position.z = 2;
+
+    object.rotation.x = 0;
+    object.rotation.y = 0;
+    object.rotation.z = Math.random() * 2 * Math.PI;
+
+    //object.scale.setScalar(Math.random() / 2 + 0.5);
+    group.add(object);
+  }
+
   // 3Dモデルを画面に表示するためのレンダラー
   renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setPixelRatio(window.devicePixelRatio);
@@ -284,6 +355,10 @@ const setControllers = () => {
   controller1 = renderer.xr.getController(0);
   controller1.addEventListener("selectstart", onSelectStart);
   controller1.addEventListener("selectend", onSelectEnd);
+  controller1.addEventListener("connected", (e) => {
+    // パッドを登録
+    controller1.gamePadRef = e.data.gamepad
+})
   scene.add(controller1);
 
   controller2 = renderer.xr.getController(1);
