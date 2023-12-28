@@ -116,6 +116,7 @@
 					object.rotation.y = Math.floor((object.rotation.y + dsnap / 2) / dsnap) * dsnap;
 					object.rotation.z = Math.floor((object.rotation.z + dsnap / 2) / dsnap) * dsnap;
 					// object.material.
+					object.material.alphaToCoverage = true; // 追加
 					object.material.opacity = 0;
 				}
 			}
