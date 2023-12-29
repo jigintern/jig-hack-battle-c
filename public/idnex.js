@@ -38,7 +38,7 @@ const isTouch = (intersection) => {
 /** トリガーを引いた時 */
 const onSelectStart = (event) => {
   // 「A」ボタンを押したがらトリガーを引いた時
-  if (controller1.gamePadRef.buttons[4].pressed) {
+  if (fixedFacePartsScene.length === 4) {
     // 全てのパーツを表示する
     const geometry = new THREE.BoxGeometry( 1, 1, 1 ); 
 const material = new THREE.MeshBasicMaterial( {color: 0x00ff00} ); 
