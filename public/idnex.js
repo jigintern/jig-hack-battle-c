@@ -11,6 +11,7 @@ let controller1, controller2;
 let raycaster;
 let group;
 
+
 /** ベースのパーツ */
 let basePartsScene = undefined
 
@@ -36,8 +37,8 @@ const isTouch = (intersection) => {
 
 /** トリガーを引いた時 */
 const onSelectStart = (event) => {
-  // 「A」ボタンを押したがらトリガーを引いた時
-  if (controller1.gamePadRef.buttons[4].pressed) {
+  // 全てのパーツを配置した後
+  if (fixedFacePartsScene.length === 4) {
     // 全てのパーツを表示する
     showAllParts()
     return
@@ -148,9 +149,9 @@ const render = () => {
 const animate = () => {
   renderer.setAnimationLoop(render);
 };
+/** 顔のパーツを表示 */
 // const facePartsPosi = [];
 // const basePartsPosi = [];
-/** 顔のパーツを表示 */
 const loadFaceParts = () => {
   /** GLTFファイルローダー */
   const loader = new GLTFLoader();
@@ -179,8 +180,8 @@ const loadFaceParts = () => {
           scene.add(gltf.scene);
           // basePartsPosi.push(child.position)
           
-          // drawLineR(facePartsPosi[2], basePartsPosi[0]);
-          // drawLineL(facePartsPosi[3], basePartsPosi[0]);
+          // drawLineR(new THREE.Vector3( 0, 0, 0 ), basePartsPosi[0]);
+          // drawLineL(new THREE.Vector3( 0, 0, 0 ), basePartsPosi[0]);
         }
       }, undefined, () => {});
     })
@@ -208,10 +209,10 @@ const showAllParts = () => {
   scene.add(basePartsScene)
 
   // 顔のパーツを表示
-  fixedFacePartsScene.forEach(parts => scene.add(parts))
-  const eyeParts = fixedFacePartsScene.filter(scene => scene.name === 'eye')
-  drawLineR(basePartsScene.position, eyeParts[0].position)
-  drawLineL(basePartsScene.position, eyeParts[1].position)
+  fixedFacePartsScene.forEach(parts => scene.add(parts));
+  const eyeParts = fixedFacePartsScene.filter(scene => scene.name === 'eye');
+  drawLineR(basePartsScene.position, eyeParts[0].position);
+  drawLineL(basePartsScene.position, eyeParts[1].position);
 }
 const drawLineR = (startPos, endPos) => {
 //   const bottomCenter = new THREE.Vector3(startPos.x, startPos.y + -0.65, startPos.z + 0.55);
@@ -241,7 +242,7 @@ const drawLineR = (startPos, endPos) => {
   const points = [];
   // points.push(new THREE.Vector3(startPos.x + -2.25, startPos.y + -0.65, startPos.z + 0.55));
   // points.push(new THREE.Vector3(endPos.x + -0.14, endPos.y + 0.7, endPos.z + 2.1));
-  points.push(new THREE.Vector3(startPos.x + 0.10 * 3, startPos.y + 0.37 * 3, startPos.z + 0.044 * 3));
+  points.push(new THREE.Vector3(startPos.x + 0.10, startPos.y + 0.15 , startPos.z + -1.7));
   points.push(new THREE.Vector3(endPos.x, endPos.y, endPos.z));
 
   const geometry = new THREE.BufferGeometry().setFromPoints(points);
@@ -255,7 +256,7 @@ const drawLineL = (startPos, endPos) => {
   const points = [];
   // points.push(new THREE.Vector3(startPos.x + -1.9, startPos.y + -0.25, startPos.z + 0.5));
   // points.push(new THREE.Vector3(endPos.x + 0.15, endPos.y + 0.68, endPos.z + 2.2));
-  points.push(new THREE.Vector3(startPos.x + 0.11 * 3, startPos.y + 0.37 * 3, startPos.z + -0.02 * 3));
+  points.push(new THREE.Vector3(startPos.x + -0.15, startPos.y + 0.13 , startPos.z + -1.7));
   points.push(new THREE.Vector3(endPos.x, endPos.y, endPos.z));
 
   const geometry = new THREE.BufferGeometry().setFromPoints(points);
@@ -404,6 +405,7 @@ const init = () => {
 
   // コントローラーを設定
   setControllers()
+
 
   // レイキャスティング
   // マウスピッキング（マウスが3D空間のどのオブジェクトの上にあるかを調べること）などに使わる。
