@@ -37,13 +37,9 @@ const isTouch = (intersection) => {
 
 /** トリガーを引いた時 */
 const onSelectStart = (event) => {
-  // 「A」ボタンを押したがらトリガーを引いた時
+  // 全てのパーツを配置した後
   if (fixedFacePartsScene.length === 4) {
     // 全てのパーツを表示する
-    const geometry = new THREE.BoxGeometry( 1, 1, 1 ); 
-const material = new THREE.MeshBasicMaterial( {color: 0x00ff00} ); 
-const cube = new THREE.Mesh( geometry, material ); 
-scene.add( cube );
     showAllParts()
     return
   }
@@ -154,6 +150,8 @@ const animate = () => {
   renderer.setAnimationLoop(render);
 };
 /** 顔のパーツを表示 */
+// const facePartsPosi = [];
+// const basePartsPosi = [];
 const loadFaceParts = () => {
   /** GLTFファイルローダー */
   const loader = new GLTFLoader();
@@ -180,6 +178,10 @@ const loadFaceParts = () => {
           // 土台のオブジェクトを保存
           basePartsScene = gltf.scene
           scene.add(gltf.scene);
+          // basePartsPosi.push(child.position)
+          
+          // drawLineR(new THREE.Vector3( 0, 0, 0 ), basePartsPosi[0]);
+          // drawLineL(new THREE.Vector3( 0, 0, 0 ), basePartsPosi[0]);
         }
       }, undefined, () => {});
     })
@@ -240,7 +242,7 @@ const drawLineR = (startPos, endPos) => {
   const points = [];
   // points.push(new THREE.Vector3(startPos.x + -2.25, startPos.y + -0.65, startPos.z + 0.55));
   // points.push(new THREE.Vector3(endPos.x + -0.14, endPos.y + 0.7, endPos.z + 2.1));
-  points.push(new THREE.Vector3(startPos.x + 0.10, startPos.y + 0.25 , startPos.z + -2));
+  points.push(new THREE.Vector3(startPos.x + 0.10, startPos.y + 0.15 , startPos.z + -1.7));
   points.push(new THREE.Vector3(endPos.x, endPos.y, endPos.z));
 
   const geometry = new THREE.BufferGeometry().setFromPoints(points);
@@ -254,7 +256,7 @@ const drawLineL = (startPos, endPos) => {
   const points = [];
   // points.push(new THREE.Vector3(startPos.x + -1.9, startPos.y + -0.25, startPos.z + 0.5));
   // points.push(new THREE.Vector3(endPos.x + 0.15, endPos.y + 0.68, endPos.z + 2.2));
-  points.push(new THREE.Vector3(startPos.x + -0.15, startPos.y + 0.2 , startPos.z + -2));
+  points.push(new THREE.Vector3(startPos.x + -0.15, startPos.y + 0.13 , startPos.z + -1.7));
   points.push(new THREE.Vector3(endPos.x, endPos.y, endPos.z));
 
   const geometry = new THREE.BufferGeometry().setFromPoints(points);
